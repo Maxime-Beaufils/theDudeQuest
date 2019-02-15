@@ -1,11 +1,12 @@
 var config = {
     type: Phaser.AUTO,
-    width: 1280,
-    height: 720,
+    width: 384,
+    height: 216,
+    backgroundColor : "#aedecb",
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 }
+            gravity: { y: 0 }
         }
     },
     scene: {
