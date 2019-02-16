@@ -1,4 +1,4 @@
-var config = {
+const config = {
     type: Phaser.AUTO,
     width: 384,
     height: 216,
@@ -6,15 +6,16 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 0 }
+            gravity: { y: 400 },
+            debug : true
         }
     },
     scene: {
         preload: preload,
         create: create,
         update: update
-    }
+    },
+    pixelArt: true,
 };
 
-
-var game = new Phaser.Game(config);
+let game = new Phaser.Game(config);

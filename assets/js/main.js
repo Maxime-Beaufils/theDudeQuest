@@ -1,55 +1,49 @@
-var jeu = {
+let jeu = {
     scene : null,
     world : world,
-    player : player
+    player : player,
+    cursor : null
 
 }
 
 function preload(){
     jeu.scene = this;
-    //  arrière plan avec Parralax
+    //  arrière plan
     this.load.image("bg1", "assets/images/background/plx-1.png");
     this.load.image("bg2", "assets/images/background/plx-2.png");
     this.load.image("bg3", "assets/images/background/plx-3.png");
     this.load.image("bg4", "assets/images/background/plx-4.png");
     this.load.image("bg5", "assets/images/background/plx-5.png");
     // carte
-    jeu.scene.load.image("titles", "assets/images/jungleTileset.png");
+    jeu.scene.load.image("tiles", "assets/images/jungleTileset.png");
     jeu.scene.load.tilemapTiledJSON("level1", "assets/json/level1.json");
     // joueur
+    jeu.scene.load.atlas("player", "assets/images/character/player.png", "assets/images/character/playerAtlas.json");
     this.load.image("jumpO", "assets/images/character/jumpO.png");
 }
 function create(){
-    jeu.world.initialiserWorld();
-    
-    // jeu.player.initialiserPlayer();
-    
-    jeu.player = jeu.scene.physics.add.sprite(150, 100, "jumpO");
-    jeu.cursor = jeu.scene.input.keyboard.createCursorKeys();
-    jeu.scene.cameras.main.startFollow(jeu.player).setBounds();
+  
+  jeu.world.initialiserWorld();
+  jeu.player.initialiserPlayer();
+  jeu.player.creerAnimationPlayer();
+  jeu.world.gererCollider();
+  jeu.world.gererCamera();
+  // cursor
+  jeu.cursor = jeu.scene.input.keyboard.createCursorKeys();
 }
 function update(){
     ajusterTailleEcran();
-    if(jeu.cursor.right.isDown){
-        jeu.world.bg5.tilePositionX += 0.3;
-        jeu.world.bg4.tilePositionX += 0.2;
-        jeu.world.bg3.tilePositionX += 0.1;
-        jeu.player.setVelocityX(100);
-        jeu.player.setFlip(false, false);
-    }else if(jeu.cursor.right.isUp){
-        jeu.player.setVelocityX(0);
-    }
-}
+    jeu.player.gererDeplacement();
+    jeu.world.gererBgParallax();
+};
 	
 function ajusterTailleEcran(){
-    var canvas = document.querySelector("canvas");
-  
-    var fenetreWidth = window.innerWidth/2;
-    var fenetreHeight = window.innerHeight/2;
-    var fenetreRatio = fenetreWidth / fenetreHeight;
-  
-    var jeuRatio = config.width / config.height;
-  
+    // max_width et max_height du canvas dans main.css
+    let canvas = document.querySelector("canvas");
+    let fenetreWidth = window.innerWidth;
+    let fenetreHeight = window.innerHeight;
+    let fenetreRatio = fenetreWidth / fenetreHeight;
+    let jeuRatio = config.width / config.height;
     if(fenetreRatio < jeuRatio){
       canvas.style.width = fenetreWidth + "px";
       canvas.style.height = (fenetreWidth/jeuRatio) + "px";
