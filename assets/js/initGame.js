@@ -1,4 +1,4 @@
-const config = {
+var config = {
     type: Phaser.AUTO,
     width: 384,
     height: 216,
@@ -18,4 +18,4 @@ const config = {
     pixelArt: true,
 };
 
-let game = new Phaser.Game(config);
+var game = new Phaser.Game(config);

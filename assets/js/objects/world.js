@@ -1,11 +1,12 @@
-let world = {
+var world = {
     tilemap : null,
     tileset : null,
     fondLayer : null,
     worldLayer : null,
     solLayer : null,
     spawnPosition : null,
-    grapPosition : null,
+    grabPosition : null,
+    grabCollider : null,
 
 
     initialiserWorld : function(){
@@ -32,10 +33,17 @@ let world = {
         // objets de la map
         this.spawnPosition = this.tilemap.findObject("Objects", obj => obj.name === "spawn");
         this.grabPosition = this.tilemap.findObject("Objects", obj => obj.name === "grab");
+        //  paramêtres du collider grab
+        this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y);
+        this.grabCollider.setOrigin(0,0).setScale(0.4);
+        this.grabCollider.body.allowGravity = false;
     },
     
     gererCollider : function(){
+        //  collide entre joueur et sol
         jeu.scene.physics.add.collider(jeu.player.aPlayer, this.worldLayer);
+        //  grab du joueur
+        jeu.scene.physics.add.overlap(jeu.player.aPlayer, this.grabCollider, jeu.player.gererGrab, null, this);
     },
 
     gererBgParallax : function(){
