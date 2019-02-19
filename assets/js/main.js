@@ -20,6 +20,8 @@ function preload(){
     // joueur
     this.load.atlas("player", "assets/images/character/player.png", "assets/images/character/playerAtlas.json");
     this.load.image("jumpO", "assets/images/character/jumpO.png");
+    // objets
+    this.load.atlas("jewel", "assets/images/objects/jewel.png", "assets/images/objects/jewelAtlas.json");
 }
 function create(){
   jeu.world.initialiserWorld();

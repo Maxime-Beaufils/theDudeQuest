@@ -11,6 +11,7 @@ var config = {
         }
     },
     scene: {
+        loader: loader,
         preload: preload,
         create: create,
         update: update

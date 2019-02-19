@@ -4,10 +4,14 @@ var world = {
     fondLayer : null,
     worldLayer : null,
     solLayer : null,
+
     spawnPosition : null,
     grabPosition : null,
     grabCollider : null,
     overlapGrabTriggered : false,
+
+    jewelPosition : [],
+    groupJewel : null,
 
 
     initialiserWorld : function(){
@@ -34,12 +38,28 @@ var world = {
         // objets de la map
         this.spawnPosition = this.tilemap.findObject("Objects", obj => obj.name === "spawn");
         this.grabPosition = this.tilemap.findObject("Objects", obj => obj.name === "grab");
+        // jewel
+        this.genererJewel();
         //  paramêtres du collider grab
         this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y);
         this.grabCollider.setOrigin(-1,0).setScale(0.3);
         this.grabCollider.body.allowGravity = false;
     },
-    
+    genererJewel : function(){
+        let nbJewel = this.tilemap.findObject("Objects", obj => obj.name === "jewel1").properties.nbJewel;
+        // recuperer les positions des jewels
+        for(var i = 1; i <= nbJewel; i++){
+           this.jewelPosition.push(this.tilemap.findObject("Objects", obj => obj.name === "jewel"+i))
+        }
+        this.groupJewel = jeu.scene.physics.add.group();
+        // ajouter les sprites de jewel suivant ces positions
+        for( var i = 0; i < this.jewelPosition.length; i++){
+            this.groupJewel.create(jeu.scene.physics.add.sprite(this.jewelPosition[i].x, this.jewelPosition[i].y, "jewel", "jewel_4"));
+        }
+        this.groupJewel.children.entries.forEach(element => { element.body.allowGravity = false });
+        console.log(this.groupJewel.children.entries)
+    },
+
     gererCollider : function(){
         //  collide entre joueur et sol
         jeu.scene.physics.add.collider(jeu.player.aPlayer, this.worldLayer);

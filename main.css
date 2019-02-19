@@ -4,3 +4,8 @@ canvas {
     max-width: 768px;
     max-height: 432px;
 }
+header {
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    padding: 30px;
+}
