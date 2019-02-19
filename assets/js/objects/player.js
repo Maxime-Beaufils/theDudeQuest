@@ -9,7 +9,7 @@ var player = {
 
 
     initialiserPlayer : function(){
-        this.aPlayer = jeu.scene.physics.add.sprite(jeu.world.spawnPosition.x + 925, jeu.world.spawnPosition.y, "player", "dudeIdle2");
+        this.aPlayer = jeu.scene.physics.add.sprite(jeu.world.spawnPosition.x, jeu.world.spawnPosition.y, "player", "dudeIdle2");
         this.aPlayer.setCollideWorldBounds(true);
         this.aPlayer.setOrigin(0.5,0);
         this.aPlayer.setSize(15,15).setOffset(4,16);
@@ -82,7 +82,6 @@ var player = {
     },
     gererGrab : function(){
         if(!jeu.world.overlapGrabTriggered && jeu.cursor.space.isUp){
-            console.log("yolo")
             jeu.player.aPlayer.isMovingRightFast = false;
             jeu.player.aPlayer.isMovingRight = false;
             jeu.player.aPlayer.isMovingLeftFast = false;
@@ -100,18 +99,27 @@ var player = {
                 jeu.player.aPlayer.anims.play("dudeGrabStand", true);
             });
         };
+        //booleen permetant de lancer le grab ou non
         jeu.world.overlapGrabTriggered = true;
         // sortir du grab
         if(jeu.cursor.space.isDown){
             jeu.player.aPlayer.body.allowGravity = true;
             jeu.player.aPlayer.setVelocityY(-170);
             jeu.player.aPlayer.isGrabing = false;
+            // L'overlap grabCollider est réactivé après 500ms
             jeu.scene.time.addEvent({
               delay : 500,
               callback : jeu.world.switchOverlapGrabTriggered,
               callbackScope : this
             });
         };
+    },
+    gererChutePlayer : function(){
+        if(jeu.player.aPlayer.y > game.config.height){
+            const msg = ['tu es mort Jack !', "c'est la piquette jack !", "t'es mauvais jack !"];
+            console.log(msg[Math.floor(Math.random() * Math.floor(3))]);
+            jeu.scene.scene.restart();
+        }
     },
     
     creerAnimationPlayer : function(){

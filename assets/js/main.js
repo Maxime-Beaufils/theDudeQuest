@@ -32,6 +32,7 @@ function create(){
 function update(time, delta){
     ajusterTailleEcran();
     jeu.player.gererDeplacement();
+    jeu.player.gererChutePlayer();
     jeu.world.gererBgParallax();
 };
 	
