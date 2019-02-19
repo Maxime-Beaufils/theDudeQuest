@@ -11,11 +11,11 @@ var player = {
     initialiserPlayer : function(){
         this.aPlayer = jeu.scene.physics.add.sprite(jeu.world.spawnPosition.x + 925, jeu.world.spawnPosition.y, "player", "dudeIdle2");
         this.aPlayer.setCollideWorldBounds(true);
-        this.aPlayer.setOrigin(0.5,1);
+        this.aPlayer.setOrigin(0.5,0);
         this.aPlayer.setSize(15,15).setOffset(4,16);
     },
     gererDeplacement : function(){
-        if(!this.isGrabing){
+        if(!this.aPlayer.isGrabing){
             //  >>>>>>>
             if(jeu.cursor.right.isDown && jeu.cursor.shift.isDown){
                 this.aPlayer.isMovingRightFast = true;
@@ -67,7 +67,6 @@ var player = {
             }
             //  ^^
             if(jeu.cursor.space.isDown && this.aPlayer.body.onFloor() && jeu.cursor.shift.isUp){
-                this.aPlayer.anims.play("dudeAir", true);
                 this.aPlayer.setVelocityY(-170);
             //  ^^^^^^
             }else if(jeu.cursor.space.isDown && this.aPlayer.body.onFloor() && jeu.cursor.shift.isDown){
@@ -82,17 +81,39 @@ var player = {
         }
     },
     gererGrab : function(){
-        jeu.player.aPlayer.isMovingRightFast = false;
-        jeu.player.aPlayer.isMovingRight = false;
-        jeu.player.aPlayer.isMovingLeftFast = false;
-        jeu.player.aPlayer.isMovingLeft = false;
-        console.log("yolo")
-        jeu.player.isGrabing = true;
-        jeu.scene.physics.moveTo(jeu.player.aPlayer,
-                                 jeu.world.grabPosition.x + jeu.world.grabPosition.width,
-                                 jeu.world.grabPosition.y + jeu.world.grabPosition.height*3, 100);
-        jeu.player.aPlayer.anims.play("dudeGrab", true);
-        },
+        if(!jeu.world.overlapGrabTriggered && jeu.cursor.space.isUp){
+            console.log("yolo")
+            jeu.player.aPlayer.isMovingRightFast = false;
+            jeu.player.aPlayer.isMovingRight = false;
+            jeu.player.aPlayer.isMovingLeftFast = false;
+            jeu.player.aPlayer.isMovingLeft = false;
+            jeu.player.aPlayer.isGrabing = true;
+            // empecher le joueur de pivoter
+            jeu.player.aPlayer.flipX = false;
+            // positionner le player sur la corniche
+            jeu.player.aPlayer.setVelocityY(0);
+            jeu.player.aPlayer.body.allowGravity = false;
+            jeu.player.aPlayer.setPosition(jeu.world.grabCollider.x + 8, jeu.world.grabCollider.y - 10);
+            // animation de grab
+            jeu.player.aPlayer.anims.play("dudeGrab");
+            jeu.player.aPlayer.once("animationcomplete", () => {
+                jeu.player.aPlayer.anims.play("dudeGrabStand", true);
+            });
+        };
+        jeu.world.overlapGrabTriggered = true;
+        // sortir du grab
+        if(jeu.cursor.space.isDown){
+            jeu.player.aPlayer.body.allowGravity = true;
+            jeu.player.aPlayer.setVelocityY(-170);
+            jeu.player.aPlayer.isGrabing = false;
+            jeu.scene.time.addEvent({
+              delay : 500,
+              callback : jeu.world.switchOverlapGrabTriggered,
+              callbackScope : this
+            });
+        };
+    },
+    
     creerAnimationPlayer : function(){
         jeu.scene.anims.create({
             key :         "dudeRun",
@@ -121,6 +142,12 @@ var player = {
         jeu.scene.anims.create({
             key :         "dudeGrab",
             frames :      jeu.scene.anims.generateFrameNames("player", {prefix: "dudeGrab", start : 1, end : 6}),
+            frameRate :   6,
+            repeat :      0
+        }),
+        jeu.scene.anims.create({
+            key :         "dudeGrabStand",
+            frames :      jeu.scene.anims.generateFrameNames("player", {prefix: "dudeGrab", start : 4, end : 6}),
             frameRate :   4,
             repeat :      -1
         })

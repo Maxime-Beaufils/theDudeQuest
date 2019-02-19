@@ -29,7 +29,7 @@ function create(){
   jeu.world.gererCamera();
   jeu.cursor = jeu.scene.input.keyboard.createCursorKeys();
 }
-function update(){
+function update(time, delta){
     ajusterTailleEcran();
     jeu.player.gererDeplacement();
     jeu.world.gererBgParallax();

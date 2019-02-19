@@ -7,6 +7,7 @@ var world = {
     spawnPosition : null,
     grabPosition : null,
     grabCollider : null,
+    overlapGrabTriggered : false,
 
 
     initialiserWorld : function(){
@@ -35,7 +36,7 @@ var world = {
         this.grabPosition = this.tilemap.findObject("Objects", obj => obj.name === "grab");
         //  paramêtres du collider grab
         this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y);
-        this.grabCollider.setOrigin(0,0).setScale(0.4);
+        this.grabCollider.setOrigin(-1,0).setScale(0.3);
         this.grabCollider.body.allowGravity = false;
     },
     
@@ -70,5 +71,8 @@ var world = {
     gererCamera : function(){
         jeu.scene.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, this.tilemap.heightInPixels-10);
         jeu.scene.cameras.main.startFollow(jeu.player.aPlayer);
+    },
+    switchOverlapGrabTriggered : function(){
+        this.overlapGrabTriggered = false;
     }
 }
