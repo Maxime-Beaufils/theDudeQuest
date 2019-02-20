@@ -123,8 +123,8 @@ var player = {
                 const msg = ['tu es mort Jack !', "c'est la piquette jack !", "t'es mauvais jack !"];
                 console.log(msg[Math.floor(Math.random() * Math.floor(3))]);
                 jeu.world.groupJewel.getChildren().forEach(child => child.destroy());
-                console.log(jeu.world.groupJewel.children)
                 jeu.world.nbJewelCollected = 0;
+                jeu.world.distanceParcouru.push(jeu.player.aPlayer.x - jeu.world.spawnPosition.x);
                 jeu.scene.scene.restart();
             }
         }

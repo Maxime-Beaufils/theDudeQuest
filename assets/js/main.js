@@ -22,6 +22,10 @@ function preload(){
     this.load.image("jumpO", "assets/images/character/jumpO.png");
     // objets
     this.load.atlas("jewel", "assets/images/objects/jewel.png", "assets/images/objects/jewelAtlas.json");
+    this.load.image("jewel_0", "assets/images/objects/jewel_0.png");
+    this.load.image("jewel_1", "assets/images/objects/jewel_1.png");
+    this.load.image("jewel_2", "assets/images/objects/jewel_2.png");
+    this.load.image("jewel_3", "assets/images/objects/jewel_3.png");
 }
 function create(){
   jeu.world.initialiserWorld();

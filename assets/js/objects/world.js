@@ -14,6 +14,9 @@ var world = {
     groupJewel : null,
     nbJewelCollected : 0,
 
+    hudJewel : null,
+    distanceParcouru : [],
+
 
     initialiserWorld : function(){
         // arrière plan
@@ -39,11 +42,17 @@ var world = {
         // objets de la map
         this.spawnPosition = this.tilemap.findObject("Objects", obj => obj.name === "spawn");
         this.grabPosition = this.tilemap.findObject("Objects", obj => obj.name === "grab");
+        // jewel
+        this.creerAnimationJewel();
         this.genererJewel();
+        this.genererMouvementJewel();
         //  paramêtres du collider grab
         this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y+1);
         this.grabCollider.setOrigin(-1,0).setScale(0.3);
         this.grabCollider.body.allowGravity = false;
+        // hud
+        this.hudJewel = jeu.scene.add.sprite(jeu.scene.game.config.width - 20, 20, "jewel_0").setScrollFactor(0);
+        this.afficherBestDistance();
     },
     genererJewel : function(){
         let nbJewel = this.tilemap.findObject("Objects", obj => obj.name === "jewel1").properties.nbJewel;
@@ -56,7 +65,8 @@ var world = {
         for(let i = 0; i < nbJewel; i++){
            this.groupJewel.create(this.jewelPosition[i].x, this.jewelPosition[i].y, 'jewel', 'jewel_4');
         }
-        this.groupJewel.children.entries.forEach(element => { element.setScale(0.6)});
+        this.groupJewel.children.entries.forEach(element => { element.setScale(0.8)});
+        this.groupJewel.children.entries.forEach(element => { element.anims.play("jewelAnim")});
         this.groupJewel.children.entries.forEach(element => { element.body.allowGravity = false });
     },
 
@@ -64,12 +74,42 @@ var world = {
         if(jeu.world.nbJewelCollected < 3){
             tile.destroy();
             jeu.world.nbJewelCollected++;
+            // HUD jewel
+            jeu.world.hudJewel.setTexture("jewel_"+jeu.world.nbJewelCollected);
+            // jeu.scene.add.text(jeu.scene.game.config.width - 40, 10, jeu.world.nbJewelCollected).setScrollFactor(0);
         };
-        console.log(jeu.world.nbJewelCollected);
+    },
+    creerAnimationJewel : function(){
+        jeu.scene.anims.create({
+            key :         "jewelAnim",
+            frames :      jeu.scene.anims.generateFrameNames("jewel", {prefix: "jewel_", start : 0, end : 5}),
+            frameRate :   12,
+            repeat :      -1
+        })
+    },
+
+    genererMouvementJewel : function(){
+        jeu.scene.tweens.add({
+            targets : this.groupJewel.children.entries,
+            y : 100,
+            ease : "linear",
+            duration : 500,
+            yoyo : true,
+            repeat : -1
+        })
+    },
+    // HUD distance
+    afficherBestDistance : function(){
+        let distanceEnMetre = [];
+        distanceMaxParcouru = Math.max.apply(null, this.distanceParcouru);
+        distanceMaxParcouru = (distanceMaxParcouru/10).toFixed(2)+" m";
+        if(this.distanceParcouru.length > 0){
+            jeu.scene.add.text(10, 10, distanceMaxParcouru, { fontSize : "14px", color : "#FFFFFF"}).setScrollFactor(0);
+        }
     },
 
     gererCollider : function(){
-        //  collide entre joueur et sol
+        //  collide entre joueur et sol     
         jeu.scene.physics.add.collider(jeu.player.aPlayer, this.worldLayer);
         // collide entre joueur et jewel
         jeu.scene.physics.add.overlap(jeu.player.aPlayer, jeu.world.groupJewel, this.collectJewel);
