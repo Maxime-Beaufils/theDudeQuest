@@ -12,6 +12,7 @@ var world = {
 
     jewelPosition : [],
     groupJewel : null,
+    nbJewelCollected : 0,
 
 
     initialiserWorld : function(){
@@ -40,23 +41,31 @@ var world = {
         this.grabPosition = this.tilemap.findObject("Objects", obj => obj.name === "grab");
         this.genererJewel();
         //  paramêtres du collider grab
-        this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y);
+        this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y+1);
         this.grabCollider.setOrigin(-1,0).setScale(0.3);
         this.grabCollider.body.allowGravity = false;
     },
     genererJewel : function(){
         let nbJewel = this.tilemap.findObject("Objects", obj => obj.name === "jewel1").properties.nbJewel;
         // recuperer les positions des jewels
-        for(var i = 1; i <= nbJewel; i++){
-           this.jewelPosition.push(this.tilemap.findObject("Objects", obj => obj.name === "jewel"+i))
+        for(let n = 1; n <= nbJewel; n++){
+           this.jewelPosition.push(this.tilemap.findObject("Objects", obj => obj.name === "jewel"+n))
         }
         this.groupJewel = jeu.scene.physics.add.group();
         // ajouter les sprites de jewel suivant ces positions
-        for( var i = 0; i < this.jewelPosition.length; i++){
+        for(let i = 0; i < nbJewel; i++){
            this.groupJewel.create(this.jewelPosition[i].x, this.jewelPosition[i].y, 'jewel', 'jewel_4');
         }
         this.groupJewel.children.entries.forEach(element => { element.setScale(0.6)});
         this.groupJewel.children.entries.forEach(element => { element.body.allowGravity = false });
+    },
+
+    collectJewel : function(player, tile){
+        if(jeu.world.nbJewelCollected < 3){
+            tile.destroy();
+            jeu.world.nbJewelCollected++;
+        };
+        console.log(jeu.world.nbJewelCollected);
     },
 
     gererCollider : function(){
@@ -95,9 +104,5 @@ var world = {
     },
     switchOverlapGrabTriggered : function(){
         this.overlapGrabTriggered = false;
-    },
-    collectJewel : function(player, tile){
-        tile.destroy();
-        
     }
 }

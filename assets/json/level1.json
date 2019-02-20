@@ -78,7 +78,7 @@
                  "name":"jewel1",
                  "properties":
                     {
-                     "nbJewel":3
+                     "nbJewel":4
                     },
                  "propertytypes":
                     {
@@ -114,6 +114,18 @@
                  "width":19,
                  "x":316.5,
                  "y":110.5
+                }, 
+                {
+                 "ellipse":true,
+                 "height":16,
+                 "id":11,
+                 "name":"jewel4",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":411.5,
+                 "y":109
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -121,7 +133,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":11,
+ "nextobjectid":12,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.1.6",

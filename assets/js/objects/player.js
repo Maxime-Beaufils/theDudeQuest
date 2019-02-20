@@ -116,11 +116,17 @@ var player = {
     },
     gererChutePlayer : function(){
         if(jeu.player.aPlayer.y > game.config.height){
-            const msg = ['tu es mort Jack !', "c'est la piquette jack !", "t'es mauvais jack !"];
-            console.log(msg[Math.floor(Math.random() * Math.floor(3))]);
-            jeu.world.groupJewel.children.entries.forEach((child) => {child.destroy()});
-            jeu.world.groupJewel.clear();
-            jeu.scene.scene.restart();
+            if(jeu.world.nbJewelCollected === 3){
+                jeu.player.aPlayer.setVelocityY(-400);
+                jeu.world.nbJewelCollected = 0;
+            }else{
+                const msg = ['tu es mort Jack !', "c'est la piquette jack !", "t'es mauvais jack !"];
+                console.log(msg[Math.floor(Math.random() * Math.floor(3))]);
+                jeu.world.groupJewel.getChildren().forEach(child => child.destroy());
+                console.log(jeu.world.groupJewel.children)
+                jeu.world.nbJewelCollected = 0;
+                jeu.scene.scene.restart();
+            }
         }
     },
     
