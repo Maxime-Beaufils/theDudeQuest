@@ -57,12 +57,13 @@ var world = {
         }
         this.groupJewel.children.entries.forEach(element => { element.setScale(0.6)});
         this.groupJewel.children.entries.forEach(element => { element.body.allowGravity = false });
-        console.log(this.groupJewel.children)
     },
 
     gererCollider : function(){
         //  collide entre joueur et sol
         jeu.scene.physics.add.collider(jeu.player.aPlayer, this.worldLayer);
+        // collide entre joueur et jewel
+        jeu.scene.physics.add.overlap(jeu.player.aPlayer, jeu.world.groupJewel, this.collectJewel);
         //  grab du joueur
         jeu.scene.physics.add.overlap(jeu.player.aPlayer, this.grabCollider, jeu.player.gererGrab, null, this);
     },
@@ -94,5 +95,9 @@ var world = {
     },
     switchOverlapGrabTriggered : function(){
         this.overlapGrabTriggered = false;
+    },
+    collectJewel : function(player, tile){
+        tile.destroy();
+        
     }
 }
