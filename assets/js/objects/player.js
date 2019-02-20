@@ -118,6 +118,7 @@ var player = {
         if(jeu.player.aPlayer.y > game.config.height){
             const msg = ['tu es mort Jack !', "c'est la piquette jack !", "t'es mauvais jack !"];
             console.log(msg[Math.floor(Math.random() * Math.floor(3))]);
+            jeu.world.groupJewel.destroyChildren = true;
             jeu.scene.scene.restart();
         }
     },
@@ -138,7 +139,7 @@ var player = {
         jeu.scene.anims.create({
             key :         "dudeIdle",
             frames :      jeu.scene.anims.generateFrameNames("player", {prefix: "dudeIdle", start : 1, end : 12}),
-            frameRate :   8,
+            frameRate :   10,
             repeat :      -1
         }),
         jeu.scene.anims.create({
