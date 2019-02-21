@@ -16,6 +16,8 @@ var world = {
 
     hudJewel : null,
     distanceParcouru : [],
+    currentDistance : 0,
+    textCurrentDistance : null,
 
 
     initialiserWorld : function(){
@@ -50,9 +52,9 @@ var world = {
         this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y+1);
         this.grabCollider.setOrigin(-1,0).setScale(0.3);
         this.grabCollider.body.allowGravity = false;
-        // hud
-        this.hudJewel = jeu.scene.add.sprite(jeu.scene.game.config.width - 20, 20, "jewel_0").setScrollFactor(0);
-        this.afficherBestDistance();
+        // hud jewel
+        jeu.scene.add.sprite(jeu.scene.game.config.width - 10, 22, "panel2").setScale(0.8).setScrollFactor(0);
+        this.hudJewel = jeu.scene.add.sprite(jeu.scene.game.config.width - 10, 20, "jewel_0").setScrollFactor(0);
     },
     genererJewel : function(){
         let nbJewel = this.tilemap.findObject("Objects", obj => obj.name === "jewel1").properties.nbJewel;
@@ -74,7 +76,7 @@ var world = {
         if(jeu.world.nbJewelCollected < 3){
             tile.destroy();
             jeu.world.nbJewelCollected++;
-            // HUD jewel
+            // HUD
             jeu.world.hudJewel.setTexture("jewel_"+jeu.world.nbJewelCollected);
             // jeu.scene.add.text(jeu.scene.game.config.width - 40, 10, jeu.world.nbJewelCollected).setScrollFactor(0);
         };
@@ -100,11 +102,13 @@ var world = {
     },
     // HUD distance
     afficherBestDistance : function(){
-        let distanceEnMetre = [];
         distanceMaxParcouru = Math.max.apply(null, this.distanceParcouru);
         distanceMaxParcouru = (distanceMaxParcouru/10).toFixed(2)+" m";
+        this.textCurrentDistance = jeu.scene.add.text(5, 6, "Current: \n"+ jeu.world.currentDistance, 
+                            {fontSize: "7px", color : "#FFFFFF", fontFamily: "'Press Start 2P'"}).setScrollFactor(0);
         if(this.distanceParcouru.length > 0){
-            jeu.scene.add.text(10, 10, distanceMaxParcouru, { fontSize : "14px", color : "#FFFFFF"}).setScrollFactor(0);
+            jeu.scene.add.text(5, 25, "Your best: \n"+ distanceMaxParcouru, 
+                            { centerText: "center", fontSize: "7px", color : "#FFFFFF", fontFamily: "'Press Start 2P'"}).setOrigin(0,0).setScrollFactor(0);
         }
     },
 

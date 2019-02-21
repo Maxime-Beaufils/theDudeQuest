@@ -26,16 +26,20 @@ function preload(){
     this.load.image("jewel_1", "assets/images/objects/jewel_1.png");
     this.load.image("jewel_2", "assets/images/objects/jewel_2.png");
     this.load.image("jewel_3", "assets/images/objects/jewel_3.png");
+    this.load.image("panel", "assets/images/objects/green_panel.png")
+    this.load.image("panel2", "assets/images/objects/green_sliderLeft.png")
 }
 function create(){
-  jeu.world.initialiserWorld();
-  jeu.player.initialiserPlayer();
-  jeu.player.creerAnimationPlayer();
-  jeu.world.gererCollider();
-  jeu.world.gererCamera();
-  jeu.cursor = jeu.scene.input.keyboard.createCursorKeys();
+    jeu.world.initialiserWorld();
+    jeu.player.initialiserPlayer();
+    jeu.player.creerAnimationPlayer();
+    jeu.world.gererCollider();
+    jeu.world.gererCamera();
+    jeu.world.afficherBestDistance();
+    jeu.cursor = jeu.scene.input.keyboard.createCursorKeys();
 }
 function update(time, delta){
+    updateCurrentDistance();
     ajusterTailleEcran();
     jeu.player.gererDeplacement();
     jeu.player.gererChutePlayer();
@@ -57,3 +61,8 @@ function ajusterTailleEcran(){
       canvas.style.height = fenetreHeight + "px";
     }
 };
+
+function updateCurrentDistance(){
+  jeu.world.currentDistance = ((jeu.player.aPlayer.x - jeu.world.spawnPosition.x)/10).toFixed(2)+" m";
+  jeu.world.textCurrentDistance.setText("Current: \n"+ jeu.world.currentDistance);
+}
