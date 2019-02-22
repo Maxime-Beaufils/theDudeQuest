@@ -24,7 +24,7 @@ var player = {
                 this.aPlayer.isMovingLeft = false;
                 this.aPlayer.anims.play("dudeRunFast", true);
                 this.aPlayer.setAngle(-6);
-                this.aPlayer.setVelocityX(120);
+                this.aPlayer.setVelocityX(160);
                 this.aPlayer.setFlip(false, false);
                 //  >>
             }else if(jeu.cursor.right.isDown){
@@ -33,7 +33,7 @@ var player = {
                 this.aPlayer.isMovingLeftFast = false;
                 this.aPlayer.isMovingLeft = false;
                 this.aPlayer.anims.play("dudeRun", true).setAngle(0);
-                this.aPlayer.setVelocityX(70);
+                this.aPlayer.setVelocityX(100);
                 this.aPlayer.setFlip(false, false);
             //  <<<<<< 
             }else if(jeu.cursor.left.isDown && jeu.cursor.shift.isDown){
@@ -43,7 +43,7 @@ var player = {
                 this.aPlayer.isMovingLeft = false;
                 this.aPlayer.anims.play("dudeRunFast", true);
                 this.aPlayer.setAngle(6);
-                this.aPlayer.setVelocityX(-120);
+                this.aPlayer.setVelocityX(-160);
                 this.aPlayer.setFlip(true, false);
             //  <<
             }else if(jeu.cursor.left.isDown){
@@ -52,7 +52,7 @@ var player = {
                 this.aPlayer.isMovingRight = false;
                 this.aPlayer.isMovingLeftFast = false;
                 this.aPlayer.anims.play("dudeRun", true).setAngle(0);
-                this.aPlayer.setVelocityX(-70);
+                this.aPlayer.setVelocityX(-100);
                 this.aPlayer.setFlip(true, false);
                 this.aPlayer.isMovingLeft = false;
                 this.aPlayer.isMovingLeftFast = false;
@@ -67,10 +67,12 @@ var player = {
             }
             //  ^^
             if(jeu.cursor.space.isDown && this.aPlayer.body.onFloor() && jeu.cursor.shift.isUp){
-                this.aPlayer.setVelocityY(-170);
+                jeu.scene.sound.play("jump", {volume: 0.1});
+                this.aPlayer.setVelocityY(-200);
             //  ^^^^^^
             }else if(jeu.cursor.space.isDown && this.aPlayer.body.onFloor() && jeu.cursor.shift.isDown){
-                this.aPlayer.setVelocityY(-220);
+                jeu.scene.sound.play("jump", {volume: 0.1});
+                this.aPlayer.setVelocityY(-260);
             }
             // animation de saut si le joueur ne touche pas le sol
             if(!this.aPlayer.body.onFloor()){
@@ -80,22 +82,23 @@ var player = {
                 
         }
     },
-    gererGrab : function(){
+    gererGrab : function(player, tile){
         if(!jeu.world.overlapGrabTriggered && jeu.cursor.space.isUp){
-            jeu.player.aPlayer.isMovingRightFast = false;
-            jeu.player.aPlayer.isMovingRight = false;
-            jeu.player.aPlayer.isMovingLeftFast = false;
-            jeu.player.aPlayer.isMovingLeft = false;
-            jeu.player.aPlayer.isGrabing = true;
+            player.isMovingRightFast = false;
+            player.isMovingRight = false;
+            player.isMovingLeftFast = false;
+            player.isMovingLeft = false;
+            player.isGrabing = true;
             // empecher le joueur de pivoter
-            jeu.player.aPlayer.flipX = false;
+            player.flipX = false;
             // positionner le player sur la corniche
-            jeu.player.aPlayer.setVelocityY(0);
-            jeu.player.aPlayer.body.allowGravity = false;
-            jeu.player.aPlayer.setPosition(jeu.world.grabCollider.x + 8, jeu.world.grabCollider.y - 10);
+            player.setVelocityY(0);
+            player.setVelocityX(0);
+            player.body.allowGravity = false;
+            player.setPosition(tile.pixelX+12, tile.pixelY-4);
             // animation de grab
-            jeu.player.aPlayer.anims.play("dudeGrab");
-            jeu.player.aPlayer.once("animationcomplete", () => {
+            player.anims.play("dudeGrab");
+            player.once("animationcomplete", () => {
                 jeu.player.aPlayer.anims.play("dudeGrabStand", true);
             });
         };
@@ -103,10 +106,10 @@ var player = {
         jeu.world.overlapGrabTriggered = true;
         // sortir du grab
         if(jeu.cursor.space.isDown){
-            jeu.player.aPlayer.body.allowGravity = true;
-            jeu.player.aPlayer.setVelocityY(-170);
-            jeu.player.aPlayer.isGrabing = false;
-            // L'overlap grabCollider est réactivé après 500ms
+            player.body.allowGravity = true;
+            player.setVelocityY(-170);
+            player.isGrabing = false;
+            // L'overlap grab est réactivé après 500ms
             jeu.scene.time.addEvent({
               delay : 500,
               callback : jeu.world.switchOverlapGrabTriggered,
@@ -117,12 +120,16 @@ var player = {
     gererChutePlayer : function(){
         if(jeu.player.aPlayer.y > game.config.height){
             if(jeu.world.nbJewelCollected === 3){
-                jeu.player.aPlayer.setVelocityY(-400);
+                jeu.player.aPlayer.setVelocityY(-500);
+                jeu.scene.sound.play("jump", {volume: 0.1});
                 jeu.world.nbJewelCollected = 0;
+                jeu.world.hudJewel.setTexture("jewel_0");
             }else{
                 const msg = ['tu es mort Jack !', "c'est la piquette jack !", "t'es mauvais jack !"];
                 console.log(msg[Math.floor(Math.random() * Math.floor(3))]);
                 jeu.world.groupJewel.getChildren().forEach(child => child.destroy());
+                jeu.scene.sound.play("chute", {volume: 0.1});
+                jeu.world.musicJeu.stop();
                 jeu.world.nbJewelCollected = 0;
                 jeu.world.distanceParcouru.push(jeu.player.aPlayer.x - jeu.world.spawnPosition.x);
                 jeu.scene.scene.restart();

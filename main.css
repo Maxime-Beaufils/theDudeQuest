@@ -5,7 +5,11 @@ canvas {
     max-height: 432px;
 }
 header {
+    color: wheat;
     text-align: center;
     font-family: 'Press Start 2P', cursive;
     padding: 30px;
+}
+body{
+    background-color: rgb(26, 25, 25);
 }

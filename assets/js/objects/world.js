@@ -2,6 +2,7 @@ var world = {
     tilemap : null,
     tileset : null,
     fondLayer : null,
+    grabLayer: null,
     worldLayer : null,
     solLayer : null,
 
@@ -18,6 +19,7 @@ var world = {
     distanceParcouru : [],
     currentDistance : 0,
     textCurrentDistance : null,
+    musicJeu: null,
 
 
     initialiserWorld : function(){
@@ -38,6 +40,7 @@ var world = {
         this.fondLayer = this.tilemap.createStaticLayer("fond", this.tileset, 0, 0);
         this.worldLayer = this.tilemap.createStaticLayer("world", this.tileset, 0, 0);
         this.solLayer = this.tilemap.createStaticLayer("sol", this.tileset, 0, 0);
+        this.grabLayer = this.tilemap.createStaticLayer("grab", this.tileset, 0, 0);
         // collide & bounds
         this.worldLayer.setCollisionBetween(1, 500);
         jeu.scene.physics.world.setBounds(0, -50, this.tilemap.widthInPixel, this.tilemap.heightInPixel);
@@ -48,13 +51,13 @@ var world = {
         this.creerAnimationJewel();
         this.genererJewel();
         this.genererMouvementJewel();
-        //  paramêtres du collider grab
-        this.grabCollider = jeu.scene.physics.add.sprite(this.grabPosition.x, this.grabPosition.y+1);
-        this.grabCollider.setOrigin(-1,0).setScale(0.3);
-        this.grabCollider.body.allowGravity = false;
         // hud jewel
+        jeu.scene.add.sprite(35, -10, "panel").setScale(0.8).setScrollFactor(0);
         jeu.scene.add.sprite(jeu.scene.game.config.width - 10, 22, "panel2").setScale(0.8).setScrollFactor(0);
         this.hudJewel = jeu.scene.add.sprite(jeu.scene.game.config.width - 10, 20, "jewel_0").setScrollFactor(0);
+        //  sound
+        this.musicJeu = jeu.scene.sound.add("musicJeu", {volume: 0.2, loop: true, pauseOnBlur: true});
+        this.musicJeu.play();
     },
     genererJewel : function(){
         let nbJewel = this.tilemap.findObject("Objects", obj => obj.name === "jewel1").properties.nbJewel;
@@ -74,6 +77,7 @@ var world = {
 
     collectJewel : function(player, tile){
         if(jeu.world.nbJewelCollected < 3){
+            jeu.scene.sound.play("jewel", {volume: 0.1});
             tile.destroy();
             jeu.world.nbJewelCollected++;
             // HUD
@@ -103,11 +107,12 @@ var world = {
     // HUD distance
     afficherBestDistance : function(){
         distanceMaxParcouru = Math.max.apply(null, this.distanceParcouru);
-        distanceMaxParcouru = (distanceMaxParcouru/10).toFixed(2)+" m";
-        this.textCurrentDistance = jeu.scene.add.text(5, 6, "Current: \n"+ jeu.world.currentDistance, 
-                            {fontSize: "7px", color : "#FFFFFF", fontFamily: "'Press Start 2P'"}).setScrollFactor(0);
+        distanceMaxParcouru = (distanceMaxParcouru/10).toFixed(2)+"m";
+        jeu.scene.add.sprite(20,15, "runO").setScale(0.7).setScrollFactor(0);
+        this.textCurrentDistance = jeu.scene.add.text(25, 15, " "+ jeu.world.currentDistance, 
+                            {fontSize: "7.5px", color : "#FFFFFF", fontFamily: "'Press Start 2P'"}).setScrollFactor(0);
         if(this.distanceParcouru.length > 0){
-            jeu.scene.add.text(5, 25, "Your best: \n"+ distanceMaxParcouru, 
+            jeu.scene.add.text(5, 35, "Your best \n"+ distanceMaxParcouru, 
                             { centerText: "center", fontSize: "7px", color : "#FFFFFF", fontFamily: "'Press Start 2P'"}).setOrigin(0,0).setScrollFactor(0);
         }
     },
@@ -118,7 +123,8 @@ var world = {
         // collide entre joueur et jewel
         jeu.scene.physics.add.overlap(jeu.player.aPlayer, jeu.world.groupJewel, this.collectJewel);
         //  grab du joueur
-        jeu.scene.physics.add.overlap(jeu.player.aPlayer, this.grabCollider, jeu.player.gererGrab, null, this);
+        this.grabLayer.setTileIndexCallback(49, jeu.player.gererGrab,this);
+        jeu.scene.physics.add.overlap(jeu.player.aPlayer, this.grabLayer);
     },
 
     gererBgParallax : function(){
