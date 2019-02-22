@@ -41,6 +41,7 @@ var world = {
         this.worldLayer = this.tilemap.createStaticLayer("world", this.tileset, 0, 0);
         this.solLayer = this.tilemap.createStaticLayer("sol", this.tileset, 0, 0);
         this.grabLayer = this.tilemap.createStaticLayer("grab", this.tileset, 0, 0);
+        this.grabLayer.alpha = 0;
         // collide & bounds
         this.worldLayer.setCollisionBetween(1, 500);
         jeu.scene.physics.world.setBounds(0, -50, this.tilemap.widthInPixel, this.tilemap.heightInPixel);

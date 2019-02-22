@@ -10,5 +10,5 @@ Phaser est un framework open source qui permet de créer des jeux html5 2d en ja
 
 ##  Le jeu: The Dude Quest
 
-Jeu de plateforme, style rétro, pixel art. Avancer le plus loin possible dans le niveau. 
+Jeu de plateforme, style rétro, pixel art. Avancer le plus loin possible dans le niveau. <br/>
 Work in Progress:  https://maxime-beaufils.github.io/theDudeQuest/ 

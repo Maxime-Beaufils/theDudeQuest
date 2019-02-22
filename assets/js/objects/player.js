@@ -95,7 +95,7 @@ var player = {
             player.setVelocityY(0);
             player.setVelocityX(0);
             player.body.allowGravity = false;
-            player.setPosition(tile.pixelX+12, tile.pixelY-4);
+            player.setPosition(tile.pixelX+8, tile.pixelY-4);
             // animation de grab
             player.anims.play("dudeGrab");
             player.once("animationcomplete", () => {
