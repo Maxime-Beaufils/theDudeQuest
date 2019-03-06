@@ -14,5 +14,5 @@ Jeu de plateforme, style rétro, pixel art. Avancer le plus loin possible dans l
 Work in Progress:  https://maxime-beaufils.github.io/theDudeQuest/ 
 
 <p float="left">
-<img src="https://github.com/Maxime-Beaufils/ca-se-regarde/blob/master/img/img1.png" width="400">
+<img src="https://github.com/Maxime-Beaufils/theDudeQuest/blob/master/assets/images/screenshot.png" width="500">
 </p>
